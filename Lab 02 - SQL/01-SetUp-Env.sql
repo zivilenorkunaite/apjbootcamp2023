@@ -195,3 +195,8 @@ AS SELECT
 
 SELECT * FROM store_data_json;
 
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.notebook.exit(database_name)
