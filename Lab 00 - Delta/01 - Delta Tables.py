@@ -48,11 +48,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run "../Lab 01 - Data Engineering/Utils/prepare-lab-environment"
-
-# COMMAND ----------
-
-generate_sales_dataset()
+# MAGIC %run "./Utils/prepare-delta-lab-env"
 
 # COMMAND ----------
 
@@ -147,12 +143,12 @@ df.createOrReplaceTempView("stores_csv_file")
 # COMMAND ----------
 
 filepath = f"file:{git_datasets_location}products.json"
-products_df = spark.read.json(filepath)
-display(products_df)
+#<read the json file into a products_df dataframe>
+#<display the dataframe>
 
 # COMMAND ----------
 
-products_df.write.saveAsTable("products")
+#<save dataframe as a table>
 
 # COMMAND ----------
 
@@ -166,17 +162,20 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
+# DBTITLE 1,Display tables and views in the table
 # MAGIC %sql
 # MAGIC SHOW TABLES 
 
 # COMMAND ----------
 
+# DBTITLE 1,Show extended information on tables
 # MAGIC %sql
 # MAGIC 
 # MAGIC DESCRIBE EXTENDED stores
 
 # COMMAND ----------
 
+# DBTITLE 1,Display history of changes on tables
 # MAGIC %sql
 # MAGIC Describe HISTORY stores
 
@@ -198,13 +197,12 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC 
-# MAGIC alter table stores
-# MAGIC add column store_country string;
+# DBTITLE 1,Adding a column
+spark.sql(f'alter table stores add column store_country string;')
 
 # COMMAND ----------
 
+# DBTITLE 1,Updating values for new columns
 # MAGIC %sql 
 # MAGIC 
 # MAGIC update stores
@@ -212,8 +210,8 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
-# MAGIC %sql 
-# MAGIC select store_country, id, name from stores
+# MAGIC %sql
+# MAGIC select store_country, count(id) as number_of_stores from stores group by store_country
 
 # COMMAND ----------
 
@@ -223,11 +221,7 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC 
-# MAGIC update stores
-# MAGIC set store_country = 'AUS'
-# MAGIC where id = 'MEL02'
+#<write your sql code here>
 
 # COMMAND ----------
 
@@ -249,7 +243,7 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
-# DBTITLE 1,Lets create some new stores
+# DBTITLE 1,Lets create an update table
 # MAGIC 
 # MAGIC %sql
 # MAGIC create table if not exists update_stores (id STRING, name STRING, email STRING, city STRING, hq_address STRING, phone_number STRING, store_country STRING);
@@ -260,6 +254,7 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
+# DBTITLE 1,Merge source to target tabe
 # MAGIC %sql
 # MAGIC 
 # MAGIC MERGE INTO stores
@@ -278,10 +273,11 @@ products_df.write.saveAsTable("products")
 # MAGIC 
 # MAGIC ###ALTER TABLE
 # MAGIC 
-# MAGIC To modify the schema or properties of a table
+# MAGIC To modify the schema or properties of a table. Refer this [page](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-alter-table.html#alter-table) for additional details
 
 # COMMAND ----------
 
+# DBTITLE 1,Change table properties for enabling CDF and column rename
 # MAGIC %sql
 # MAGIC ALTER TABLE stores SET TBLPROPERTIES (
 # MAGIC    'delta.columnMapping.mode' = 'name',
@@ -312,6 +308,11 @@ products_df.write.saveAsTable("products")
 
 # COMMAND ----------
 
+#Set constraint on the table
+#Insert a new entry into table with null value for store id. Refer to this page for insert examples - https://docs.databricks.com/sql/language-manual/sql-ref-syntax-dml-insert-into.html#insert
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC 
 # MAGIC ### Delta History and Time Travel
@@ -331,7 +332,7 @@ products_df.write.saveAsTable("products")
 # MAGIC 
 # MAGIC Having all this information and old data files mean that we can **Time Travel**!  You can query your table at any given `VERSION AS OF` or  `TIMESTAMP AS OF`.
 # MAGIC 
-# MAGIC Let's check again what table looked like before we ran last update
+# MAGIC Let's check again what table looked like before we ran last update. Note that you need to query with the column name as per schema of that version.
 
 # COMMAND ----------
 
@@ -349,7 +350,7 @@ products_df.write.saveAsTable("products")
 # MAGIC %md
 # MAGIC 
 # MAGIC ### Lab exercise : Perform an anti join for the same table with previous version ###
-# MAGIC Refer to the [Join](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-join.html) syntax for further details
+# MAGIC Refer to the [Join](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-qry-select-join.html) syntax for further details. The query should output the new store values that are entered.
 
 # COMMAND ----------
 
@@ -429,7 +430,7 @@ products_df.write.saveAsTable("products")
 # MAGIC ### CLONE
 # MAGIC 
 # MAGIC 
-# MAGIC What if our use case is more of a having monthly snapshots of the data instead of detailed changes log? Easy way to get it done is to create CLONE of table.
+# MAGIC What if our usecase needed some data testing or new modifications to be done? Easy way to get it done is to create CLONE of table.
 # MAGIC 
 # MAGIC You can create a copy of an existing Delta table at a specific version using the clone command. Clones can be either deep or shallow.
 # MAGIC 
@@ -461,3 +462,13 @@ products_df.write.saveAsTable("products")
 # MAGIC -- Note that no files are copied
 # MAGIC 
 # MAGIC create table stores_clone_shallow SHALLOW CLONE stores
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC 
+# MAGIC ###Lab exercise: Delete the store id 'SYD02' in the stores table and verify in the shallow clone. Try on the deep clone case too 
+
+# COMMAND ----------
+
+
