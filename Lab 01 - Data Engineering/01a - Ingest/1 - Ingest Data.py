@@ -84,14 +84,6 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 # MAGIC %sql
 # MAGIC 
 # MAGIC -- CREATE TABLE IF NOT EXISTS my_stores;
-# MAGIC 
-# MAGIC 
-# MAGIC -- AA Code
-# MAGIC -- COPY INTO my_stores 
-# MAGIC -- FROM 'dbfs:/FileStore/tmp/agnieszka.augustyniak@databricks.com/datasets/stores'
-# MAGIC -- FILEFORMAT = json
-# MAGIC -- FORMAT_OPTIONS ("mergeSchema" = "true")
-# MAGIC -- COPY_OPTIONS ("mergeSchema" = "true")
 
 # COMMAND ----------
 
@@ -104,27 +96,6 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 # COMMAND ----------
 
 # Optional: write autoloader statement to load sales records
-
-# AA Code
-# schema_location = (
-#     "dbfs:/FileStore/tmp/agnieszka.augustyniak@databricks.com/_schema/stores"
-# )
-# checkpoint_location = (
-#     "dbfs:/FileStore/tmp/agnieszka.augustyniak@databricks.com/_checkpoint/stores"
-# )
-
-# file_path = "dbfs:/FileStore/tmp/agnieszka.augustyniak@databricks.com/datasets/stores"
-
-# (
-#     spark.readStream.format("cloudFiles")
-#     .option("cloudFiles.format", "json")
-#     .option("cloudFiles.schemaLocation", schema_location)
-#     .load(file_path)
-#     .writeStream
-#     .option("checkpointLocation", checkpoint_location)
-#     .trigger(availableNow=True)
-#     .toTable("stores")
-# )
 
 # COMMAND ----------
 
@@ -194,23 +165,6 @@ else:
 # COMMAND ----------
 
 # Create a temperature over time visualisation
-
-# AA Code
-weather_df.createOrReplaceTempView("weather")
-sql = """
-    WITH data AS (
-    SELECT
-        explode(arrays_zip(hourly.*)) AS values
-    FROM weather
-    )
-    SELECT 
-        values.rain,
-        values.temperature_2m,
-        values.time::timestamp AS time
-    FROM data
-"""
-
-display(spark.sql(sql))
 
 # COMMAND ----------
 
