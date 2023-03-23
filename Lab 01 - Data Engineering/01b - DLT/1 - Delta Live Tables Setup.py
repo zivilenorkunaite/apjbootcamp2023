@@ -21,7 +21,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./Utils/prepare-lab-environment-mini
+# MAGIC %run ../Utils/prepare-lab-environment-mini
 
 # COMMAND ----------
 

@@ -9,7 +9,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./Utils/prepare-lab-environment
+# MAGIC %run ../Utils/prepare-lab-environment
 
 # COMMAND ----------
 
@@ -36,12 +36,11 @@ df = spark.read.json(products_cloud_storage_location)
 # MAGIC 
 # MAGIC Do you remember how to explore this dataset using notebooks?
 # MAGIC 
-# MAGIC Hint: use display() or createOrReplaceTemporaryView()
+# MAGIC Hint: use `display()` or `createOrReplaceTemporaryView()`
 
 # COMMAND ----------
 
 # Explore customers dataset
-
 
 # COMMAND ----------
 
@@ -49,7 +48,10 @@ df = spark.read.json(products_cloud_storage_location)
 # MAGIC 
 # MAGIC ## Ingesting new files from same location
 # MAGIC 
-# MAGIC The `COPY INTO` SQL command lets you load data from a file location into a Delta table. This is a re-triable and idempotent operation; files in the source location that have already been loaded are skipped.
+# MAGIC The [`COPY INTO`](https://docs.databricks.com/sql/language-manual/delta-copy-into.html) SQL command lets you load data from a file location into a Delta table. This is a re-triable and idempotent operation; files in the source location that have already been loaded are skipped.
+# MAGIC 
+# MAGIC `FORMAT_OPTIONS ('mergeSchema' = 'true')` - Whether to infer the schema across multiple files and to merge the schema of each file. Default = false. Enabled by default for Auto Loader when inferring the schema.
+# MAGIC `COPY_OPTIONS ('mergeSchema' = 'true')` - default false. If set to true, the schema can be evolved according to the incoming data.
 
 # COMMAND ----------
 
@@ -59,8 +61,8 @@ spark.sql(f"""
 COPY INTO my_products 
 FROM '{datasets_location}products/'
 FILEFORMAT = json
-FORMAT_OPTIONS ('mergeSchema' = 'true')
-COPY_OPTIONS ('mergeSchema' = 'true')
+FORMAT_OPTIONS ('mergeSchema' = 'true') -- applies schema merge accross all source files
+COPY_OPTIONS ('mergeSchema' = 'true') -- applies schema merge on target table if source schema is different
 """)
 
 # COMMAND ----------
@@ -71,13 +73,17 @@ COPY_OPTIONS ('mergeSchema' = 'true')
 # MAGIC 
 # MAGIC We also have stores dataset available. Write COPY INTO statement for that dataset using `%sql` cell. 
 # MAGIC 
-# MAGIC `Hint` Use dbutils.fs.ls(datasets_location) to find sales dataset files and print that location to get full path for SQL
+# MAGIC Hint: Use `dbutils.fs.ls(datasets_location)` to find sales dataset files and print that location to get full path for SQL
+
+# COMMAND ----------
+
+dbutils.fs.ls(f"{datasets_location}/stores")
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC 
-# MAGIC -- CREATE TABLE IF NOT EXISTS my_storess;
+# MAGIC -- CREATE TABLE IF NOT EXISTS my_stores;
 
 # COMMAND ----------
 
@@ -97,11 +103,11 @@ COPY_OPTIONS ('mergeSchema' = 'true')
 # MAGIC 
 # MAGIC ## Ingest data from API
 # MAGIC 
-# MAGIC If you want to query data via API you can use a python library requests and https://open-meteo.com/
+# MAGIC If you want to query data via API you can use a python requests library and https://open-meteo.com/
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC We will need latitude and longitute for a given location. Look it up on https://www.latlong.net/ or use one of the examples:
+# MAGIC We will need latitude and longitude for a given location. Look it up on https://www.latlong.net/ or use one of the examples:
 # MAGIC   
 # MAGIC   Auckland: 
 # MAGIC   
@@ -149,12 +155,12 @@ else:
 # MAGIC 
 # MAGIC ## Hands On Task
 # MAGIC 
-# MAGIC Can you draw a temprature chart using this dataset?
+# MAGIC Can you draw a temperature chart using this dataset?
 # MAGIC 
-# MAGIC `Hint`: Maybe switch to SQL and use some of the available SQL functions here https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin-alpha.html
+# MAGIC **Hint**: Maybe switch to SQL and use some of the available [SQL functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin-alpha.html) 
 # MAGIC 
 # MAGIC 
-# MAGIC `Hint 2`: Check out how `arrays_zip()` and `explode()` work
+# MAGIC **Hint 2**: Check out how [`arrays_zip()`](https://docs.databricks.com/sql/language-manual/functions/arrays_zip.html) and [`explode()`](https://docs.databricks.com/sql/language-manual/functions/explode.html) work
 
 # COMMAND ----------
 
@@ -164,13 +170,13 @@ else:
 
 # Save this dataset as json file. We will be using it for our Transform part of the Lab
 
-import datetime 
+import datetime
 
 today = datetime.datetime.now()
 
 unique_forecast_id = f"forecast{lat}{long}{today}".replace(":","-")
 
-weather_df.write.mode('Overwrite').json(f"{datasets_location}weather/{unique_forecast_id}.json")
+weather_df.write.mode('overwrite').json(f"{datasets_location}weather/{unique_forecast_id}.json")
 
 # COMMAND ----------
 
