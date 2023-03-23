@@ -49,7 +49,7 @@ COMMENT "Information about stores"
 AS 
 SELECT *, case when id in ('SYD01', 'MEL01', 'BNE02', 'MEL02', 'PER01', 'CBR01') then 'AUS' when id in ('AKL01', 'AKL02', 'WLG01') then 'NZL' end as country_code 
 FROM  
-cloud_files('/FileStore/tmp/${current_user_id}/datasets/stores/' , 'json');
+cloud_files('/FileStore/tmp/${current_user_id}/datasets/stores/', 'json');
 
 -- COMMAND ----------
 
@@ -59,7 +59,7 @@ TBLPROPERTIES ("quality" = "cdc")
 COMMENT "CDC records for our products dataset"
 AS 
 SELECT * FROM 
-cloud_files( '/FileStore/tmp/${current_user_id}/datasets/products_cdc/' , "json") ;
+cloud_files('/FileStore/tmp/${current_user_id}/datasets/products_cdc/', "json") ;
 
 -- COMMAND ----------
 
@@ -76,7 +76,7 @@ TBLPROPERTIES ("quality" = "bronze")
 COMMENT "Records from weather api"
 AS 
 SELECT * FROM 
-cloud_files( '/FileStore/tmp/${current_user_id}/datasets/weather/' , "json") ;
+cloud_files('/FileStore/tmp/${current_user_id}/datasets/weather/', "json") ;
 
 -- COMMAND ----------
 

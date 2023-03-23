@@ -101,7 +101,7 @@ COPY_OPTIONS ('mergeSchema' = 'true')
 # MAGIC 
 # MAGIC 
 # MAGIC 
-# MAGIC We will need latitude and longitute for a given location. Look it up on https://www.latlong.net/ or use one of the examples:
+# MAGIC We will need latitude and longitude for a given location. Look it up on https://www.latlong.net/ or use one of the examples:
 # MAGIC   
 # MAGIC   Auckland: 
 # MAGIC   
@@ -149,7 +149,7 @@ else:
 # MAGIC 
 # MAGIC ## Hands On Task
 # MAGIC 
-# MAGIC Can you draw a temprature chart using this dataset?
+# MAGIC Can you draw a temperature chart using this dataset?
 # MAGIC 
 # MAGIC `Hint`: Maybe switch to SQL and use some of the available SQL functions here https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin-alpha.html
 # MAGIC 
