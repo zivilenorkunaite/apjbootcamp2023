@@ -7,12 +7,14 @@ current_user_id = dbutils.notebook.entry_point.getDbutils().notebook().getContex
 datasets_location = f'/FileStore/tmp/{current_user_id}/datasets/'
 
 dbutils.fs.rm(datasets_location, True)
+print(f'Dataset files are generated at location: %s' %datasets_location)
 
 # COMMAND ----------
 
 database_name = current_user_id.split('@')[0].replace('.','_')+'_bootcamp'
 spark.sql(f'create database if not exists {database_name};')
 spark.sql(f'use {database_name}')
+print(f'Created Database: %s' %database_name)
 
 # COMMAND ----------
 
