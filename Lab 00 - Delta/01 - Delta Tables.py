@@ -472,3 +472,12 @@ spark.sql(f'alter table stores add column store_country string;')
 # COMMAND ----------
 
 
+
+# COMMAND ----------
+
+# DBTITLE 1,Clean up the LAB
+# MAGIC %run "./Utils/cleanup-delta-lab-env"
+
+# COMMAND ----------
+
+
