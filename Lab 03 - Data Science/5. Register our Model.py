@@ -114,10 +114,11 @@ displayHTML(f"<h4>This model will by default be in the version None stage. Check
 # MAGIC </div>
 # MAGIC 
 # MAGIC Now go ahead and observe the model in the Model Registry:
+# MAGIC 
 # MAGIC 0. Ensure that you are in the Machine Learning persona on the LHS
 # MAGIC - Click "Models" on the left sidebar
 # MAGIC - Find your Model (if your username is **```"yan_moiseev"```**, you should see it as **````orange_experiment_yan_moiseev````**)
-# MAGIC - Click on "Version 2"
+# MAGIC - Click on "Version 1"
 # MAGIC - Click on "Stage", transition it to "Production"
 
 # COMMAND ----------
@@ -183,10 +184,6 @@ display(spark_df.withColumn("prediction", predict_udf(*features)))
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 # MAGIC %md-sandbox
 # MAGIC 
 # MAGIC ## Let's now register this model for real time inference
@@ -195,7 +192,3 @@ display(spark_df.withColumn("prediction", predict_udf(*features)))
 # MAGIC <img src="https://cms.databricks.com/sites/default/files/inline-images/db-498-blog-imgs-1.png" >
 # MAGIC 
 # MAGIC </div>
-
-# COMMAND ----------
-
-
