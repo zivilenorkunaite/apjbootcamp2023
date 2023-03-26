@@ -36,7 +36,7 @@ df = spark.read.json(products_cloud_storage_location)
 # MAGIC 
 # MAGIC Do you remember how to explore this dataset using notebooks?
 # MAGIC 
-# MAGIC Hint: use display() or createOrReplaceTemporaryView()
+# MAGIC Hint: use `display()` or `createOrReplaceTempView()`
 
 # COMMAND ----------
 

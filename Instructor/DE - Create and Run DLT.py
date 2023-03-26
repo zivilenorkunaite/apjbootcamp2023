@@ -1,4 +1,8 @@
 # Databricks notebook source
+!pip install databricks_cli
+
+# COMMAND ----------
+
 dlt_pipeline_name = "apjdatabricksbootcamp-DLT-demo"
 workflow_name = "apjdatabricksbootcamp-workflow-demo"
 target_db = "apjdatabricksbootcamp"
