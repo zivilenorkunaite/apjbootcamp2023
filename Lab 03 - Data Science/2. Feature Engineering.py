@@ -77,7 +77,7 @@ plt.show()
 # MAGIC 
 # MAGIC We now register our features into the feature store so others in APJuice can reuse our features for other experiments! The feature store will also make inference easier as the Delta table will record our transformations and reapply these during inference. This applies to both batch and streaming inference. Orange (🍊) you glad you chose Delta!
 # MAGIC 
-# MAGIC A centralised feature store also allows for discoverability and reusability of our feature accross our organization, increasing team efficiency of data scientists. The feature store can bring traceability and governance in your deployments, knowing which model is dependent of which set of features.
+# MAGIC A centralised feature store also allows for discoverability and reusability of our feature across our organization, increasing team efficiency of data scientists. The feature store can bring traceability and governance in your deployments, knowing which model is dependent of which set of features.
 # MAGIC 
 # MAGIC <!-- 
 # MAGIC <img src="https://github.com/QuentinAmbard/databricks-demo/raw/main/product_demos/mlops-end2end-flow-feature-store.png" style="float:right" width="500" />
