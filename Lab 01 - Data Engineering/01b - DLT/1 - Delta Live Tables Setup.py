@@ -41,8 +41,14 @@
 # COMMAND ----------
 
 storage_location = f'/FileStore/tmp/{current_user_id}/dlt_pipeline'
+pipline_name = f"{current_user_id}_pipeline"
+notebook_path = f"/Repos/{current_user_id}/apjbootcamp2023/Lab 01 - Data Engineering/01b - DLT/2 - Transform"
 
 displayHTML("""<h2>Use these values to create your Delta Live Pipeline</h2>""")
+displayHTML("""<b>Noteook path: </b>""")
+displayHTML(f"""<b style="color:green">{notebook_path}</b>""")
+displayHTML("""<b>Pipeline name: </b>""")
+displayHTML(f"""<b style="color:green">{pipline_name}</b>""")
 displayHTML("""<b>Storage Location: </b>""")
 displayHTML("""<b style="color:green">{}</b>""".format(storage_location))
 displayHTML("""<b>Target Schema:</b>""")
@@ -88,7 +94,12 @@ generate_more_orders()
 
 spark.sql(f"USE {database_name};")
 
-spark.sql(f"CREATE OR REPLACE VIEW pipeline_logs AS SELECT * FROM delta.`{storage_path}/system/events`")
+spark.sql(f"CREATE OR REPLACE VIEW pipeline_logs AS SELECT * FROM delta.`{storage_location}/system/events`")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe extended pipeline_logs
 
 # COMMAND ----------
 
@@ -96,6 +107,7 @@ spark.sql(f"CREATE OR REPLACE VIEW pipeline_logs AS SELECT * FROM delta.`{storag
 # MAGIC 
 # MAGIC SELECT
 # MAGIC   id,
+# MAGIC   timestamp,
 # MAGIC   expectations.dataset,
 # MAGIC   expectations.name,
 # MAGIC   expectations.failed_records,
@@ -109,7 +121,10 @@ spark.sql(f"CREATE OR REPLACE VIEW pipeline_logs AS SELECT * FROM delta.`{storag
 # MAGIC     explode(from_json(details:flow_progress:data_quality:expectations
 # MAGIC              ,schema_of_json("[{'name':'str', 'dataset':'str', 'passed_records':42, 'failed_records':42}]"))) expectations
 # MAGIC   FROM pipeline_logs
-# MAGIC   WHERE details:flow_progress.metrics IS NOT NULL) data_quality
+# MAGIC   WHERE details:flow_progress.metrics IS NOT NULL
+# MAGIC   ) data_quality
+# MAGIC   ORDER BY timestamp desc
+# MAGIC   
 
 # COMMAND ----------
 

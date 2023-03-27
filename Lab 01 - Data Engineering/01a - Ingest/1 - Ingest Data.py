@@ -166,6 +166,7 @@ else:
 
 # Create a temperature over time visualisation
 
+
 # COMMAND ----------
 
 # Save this dataset as json file. We will be using it for our Transform part of the Lab

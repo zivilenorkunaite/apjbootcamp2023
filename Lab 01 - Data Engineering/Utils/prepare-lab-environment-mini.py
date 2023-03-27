@@ -237,8 +237,9 @@ def generate_more_orders():
         hours_orders.append(order)
                 
     # save full hour of sales to json
-    store_as_json( spark.createDataFrame(hours_orders).coalesce(1), store_id, f"{order_date.strftime('%Y-%m-%d')} {order_hour:02d}") 
-    return 'More orders have been generated'
+    postfix_timestamp = f"{order_date.strftime('%Y-%m-%d-%M')} {order_hour:02d}"
+    store_as_json( spark.createDataFrame(hours_orders).coalesce(1), store_id, postfix_timestamp) 
+    return f'More orders have been generated: {postfix_timestamp}'
 
 
 # COMMAND ----------
