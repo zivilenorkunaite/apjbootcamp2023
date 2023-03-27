@@ -112,7 +112,7 @@ def create_new_sql_query(warehouse_id):
 def create_dlt_pipeline():
   pipeline_id = ''
   
-  dlt_pipeline_location = f"/Repos/{current_user_id}/apjbootcamp2022/Instructor/DE - Lab - 02 - Transform (Full)"
+  dlt_pipeline_location = f"/Repos/{current_user_id}/apjbootcamp2023/Instructor/DE - Lab - 02 - Transform (Full)"
   notebook_paths = [{"notebook": {"path": dlt_pipeline_location}}]
   dlt_configuration = []
 
@@ -160,7 +160,7 @@ def create_new_job(dlt_pipeline_id, query_id, warehouse_id):
             "task_key": "ingest_dataset",
             "description": "Ingest dataset for DLT",
             "notebook_task": {
-                "notebook_path": f"/Repos/{current_user_id}/apjbootcamp2022/Instructor/DE - Lab - 01 - Ingest Data (Full)"
+                "notebook_path": f"/Repos/{current_user_id}/apjbootcamp2023/Instructor/DE - Lab - 01 - Ingest Data (Full)"
             },
             "max_retries": 1,
             "retry_on_timeout": "false",
