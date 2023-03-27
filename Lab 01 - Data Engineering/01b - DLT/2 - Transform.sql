@@ -9,25 +9,6 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## Important
--- MAGIC 
--- MAGIC You will need to create a variable for identifying path to your data when creating a DLT pipeline. You can enter variable under **Advanced** -> Configuration
--- MAGIC 
--- MAGIC Key: `current_user_id`
--- MAGIC 
--- MAGIC You can get value by running the following python cell. Comment out `%python` cell as DLT does not accept both `%python` and  %sql   in one notebook.
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC 
--- MAGIC current_user_id = dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get()
--- MAGIC 
--- MAGIC print(current_user_id)
-
--- COMMAND ----------
-
--- MAGIC %md
 -- MAGIC 
 -- MAGIC ## Step 1: Create Bronze table for Sales
 
