@@ -1,10 +1,10 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC 
+# MAGIC
 # MAGIC ## Prepare your lab
-# MAGIC 
+# MAGIC
 # MAGIC Run the next 2 cells to generate some data we will be using for this lab.
-# MAGIC 
+# MAGIC
 # MAGIC Data will be stored in a separate location
 
 # COMMAND ----------
@@ -13,14 +13,9 @@
 
 # COMMAND ----------
 
-# This will take up to 2min to run
-generate_sales_dataset()
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC ## Ingest data from cloud storage
-# MAGIC 
+# MAGIC
 # MAGIC If your data is already in the cloud - you can simply read it from S3/ADLS 
 
 # COMMAND ----------
@@ -31,11 +26,11 @@ df = spark.read.json(products_cloud_storage_location)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
+# MAGIC
 # MAGIC ## Hands On Task!
-# MAGIC 
+# MAGIC
 # MAGIC Do you remember how to explore this dataset using notebooks?
-# MAGIC 
+# MAGIC
 # MAGIC Hint: use `display()` or `createOrReplaceTempView()`
 
 # COMMAND ----------
@@ -45,11 +40,11 @@ df = spark.read.json(products_cloud_storage_location)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
+# MAGIC
 # MAGIC ## Ingesting new files from same location
-# MAGIC 
+# MAGIC
 # MAGIC The [`COPY INTO`](https://docs.databricks.com/sql/language-manual/delta-copy-into.html) SQL command lets you load data from a file location into a Delta table. This is a re-triable and idempotent operation; files in the source location that have already been loaded are skipped.
-# MAGIC 
+# MAGIC
 # MAGIC `FORMAT_OPTIONS ('mergeSchema' = 'true')` - Whether to infer the schema across multiple files and to merge the schema of each file. Default = false. Enabled by default for Auto Loader when inferring the schema.
 # MAGIC `COPY_OPTIONS ('mergeSchema' = 'true')` - default false. If set to true, the schema can be evolved according to the incoming data.
 
@@ -68,11 +63,11 @@ COPY_OPTIONS ('mergeSchema' = 'true') -- applies schema merge on target table if
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
+# MAGIC
 # MAGIC ## Hands On Task!
-# MAGIC 
-# MAGIC We also have stores dataset available. Write COPY INTO statement for that dataset using `%sql` cell. 
-# MAGIC 
+# MAGIC
+# MAGIC We also have stores dataset available. Write COPY INTO statement for that dataset using `%sql` cell. Note that SQL code example can be copied from the cell above, you will only need to specify correct dataset files location!
+# MAGIC
 # MAGIC Hint: Use `dbutils.fs.ls(datasets_location)` to find sales dataset files and print that location to get full path for SQL
 
 # COMMAND ----------
@@ -82,31 +77,53 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC 
+# MAGIC
 # MAGIC -- CREATE TABLE IF NOT EXISTS my_stores;
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
-# MAGIC ## Advanced Task
-# MAGIC 
+# MAGIC
+# MAGIC ## Hands On Task!
+# MAGIC
 # MAGIC What would that look using autoloader? You can find syntax for it here: https://docs.databricks.com/getting-started/etl-quick-start.html
 
 # COMMAND ----------
 
-# Optional: write autoloader statement to load sales records
+# Import functions
+from pyspark.sql.functions import input_file_name, current_timestamp
+
+# Define variables used in code below
+file_path = f"{datasets_location}/sales"
+table_name = f"sales_with_autoloader"
+checkpoint_path = f"/tmp/{current_user_id}/_checkpoint/etl_quickstart"
+
+# Clear out data from previous demo execution
+spark.sql(f"DROP TABLE IF EXISTS {table_name}")
+dbutils.fs.rm(checkpoint_path, True)
+
+# Configure Auto Loader to ingest JSON data to a Delta table
+(spark.readStream
+  .format(<<fill-in>>)
+  .option("cloudFiles.format", <<fill-in>>)
+  .option("cloudFiles.schemaLocation", checkpoint_path)
+  .load(file_path)
+  .select("*", input_file_name().alias("source_file"), current_timestamp().alias("processing_time"))
+  .writeStream
+  .option("checkpointLocation", checkpoint_path)
+  .trigger(availableNow=True)
+  .toTable(table_name))
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
+# MAGIC
 # MAGIC ## Ingest data from API
-# MAGIC 
+# MAGIC
 # MAGIC If you want to query data via API you can use a python requests library and https://open-meteo.com/
-# MAGIC 
-# MAGIC 
-# MAGIC 
+# MAGIC
+# MAGIC
+# MAGIC
 # MAGIC We will need latitude and longitude for a given location. Look it up on https://www.latlong.net/ or use one of the examples:
 # MAGIC   
 # MAGIC   Auckland: 
@@ -152,40 +169,34 @@ else:
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
+# MAGIC
 # MAGIC ## Hands On Task
-# MAGIC 
+# MAGIC
 # MAGIC Can you draw a temperature chart using this dataset?
-# MAGIC 
+# MAGIC
 # MAGIC **Hint**: Maybe switch to SQL and use some of the available [SQL functions](https://docs.databricks.com/sql/language-manual/sql-ref-functions-builtin-alpha.html) 
-# MAGIC 
-# MAGIC 
+# MAGIC
+# MAGIC
 # MAGIC **Hint 2**: Check out how [`arrays_zip()`](https://docs.databricks.com/sql/language-manual/functions/arrays_zip.html) and [`explode()`](https://docs.databricks.com/sql/language-manual/functions/explode.html) work
 
 # COMMAND ----------
 
 # Create a temperature over time visualisation
-
+weather_df.createOrReplaceTempView('weather_ds')
 
 # COMMAND ----------
 
-# Save this dataset as json file. We will be using it for our Transform part of the Lab
-
-import datetime
-
-today = datetime.datetime.now()
-
-unique_forecast_id = f"forecast{lat}{long}{today}".replace(":","-")
-
-weather_df.write.mode('overwrite').json(f"{datasets_location}weather/{unique_forecast_id}.json")
+# MAGIC %sql
+# MAGIC
+# MAGIC select * from weather_ds
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC 
-# MAGIC 
+# MAGIC
+# MAGIC
 # MAGIC ## Partner Connect
-# MAGIC 
+# MAGIC
 # MAGIC Partner Connect makes it easy for you to discover data, analytics and AI tools directly within the Databricks platform — and quickly integrate the tools you already use today. 
-# MAGIC 
+# MAGIC
 # MAGIC With Partner Connect, you can simplify tool integration to just a few clicks and rapidly expand the capabilities of your lakehouse.

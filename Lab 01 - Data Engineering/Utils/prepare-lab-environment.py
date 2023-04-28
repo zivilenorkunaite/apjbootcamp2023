@@ -309,6 +309,5 @@ generate_product_cdc_data()
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC 
-# MAGIC You now can run `generate_sales_dataset()` to populate sales dataset and `generate_more_orders()` to generate some orders for a random store with current date.
+# This will take up to 2min to run
+generate_sales_dataset()
