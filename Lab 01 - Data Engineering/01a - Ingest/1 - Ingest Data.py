@@ -13,11 +13,6 @@
 
 # COMMAND ----------
 
-# This will take up to 2min to run
-generate_sales_dataset()
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC ## Ingest data from cloud storage
 # MAGIC
@@ -82,7 +77,9 @@ COPY_OPTIONS ('mergeSchema' = 'true') -- applies schema merge on target table if
 # MAGIC
 # MAGIC ## Hands On Task!
 # MAGIC
+# MAGIC
 # MAGIC We also have stores dataset available. Write COPY INTO statement for that dataset using `%sql` cell. 
+# MAGIC
 # MAGIC
 # MAGIC Hint: Use `dbutils.fs.ls(datasets_location)` to find sales dataset files and print that location to get full path for SQL
 
@@ -93,6 +90,7 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC
 # MAGIC
 # MAGIC -- You need to first create your table..
 # MAGIC CREATE TABLE IF NOT EXISTS my_stores;
@@ -109,13 +107,13 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 
 # MAGIC %md
 # MAGIC
-# MAGIC ## Advanced Task
+# MAGIC
+# MAGIC ## Hands On Task!
+# MAGIC
 # MAGIC
 # MAGIC What would that look using autoloader? You can find syntax for it here: https://docs.databricks.com/getting-started/etl-quick-start.html
 
 # COMMAND ----------
-
-# Optional: write autoloader statement to load sales records
 
 # We need to specify checkpoint location for our autoloader metadata, let's keep it next to the table
 checkpoint_path = f"{datasets_location}/checkpoints/stores"
@@ -198,6 +196,7 @@ weather_df.createOrReplaceTempView("weather_table")
 
 # COMMAND ----------
 
+# MAGIC
 # MAGIC %sql
 # MAGIC -- Create a temperature over time visualisation
 # MAGIC -- HINT - Click on <+> sign next to your result and add visualization tab -> select Line chart and provide time as `x column` and temperature as `y column`
@@ -216,18 +215,6 @@ weather_df.createOrReplaceTempView("weather_table")
 # MAGIC     from
 # MAGIC       weather_table
 # MAGIC   )
-
-# COMMAND ----------
-
-# Save this dataset as json file. We will be using it for our Transform part of the Lab
-
-import datetime
-
-today = datetime.datetime.now()
-
-unique_forecast_id = f"forecast{lat}{long}{today}".replace(":","-")
-
-weather_df.write.mode('overwrite').json(f"{datasets_location}weather/{unique_forecast_id}.json")
 
 # COMMAND ----------
 
