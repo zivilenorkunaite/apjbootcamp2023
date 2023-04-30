@@ -77,9 +77,9 @@ COPY_OPTIONS ('mergeSchema' = 'true') -- applies schema merge on target table if
 # MAGIC
 # MAGIC ## Hands On Task!
 # MAGIC
-
-# MAGIC We also have stores dataset available. Write COPY INTO statement for that dataset using `%sql` cell. Note that SQL code example can be copied from the cell above, you will only need to specify correct dataset files location!
-
+# MAGIC
+# MAGIC We also have stores dataset available. Write COPY INTO statement for that dataset using `%sql` cell. 
+# MAGIC
 # MAGIC
 # MAGIC Hint: Use `dbutils.fs.ls(datasets_location)` to find sales dataset files and print that location to get full path for SQL
 
@@ -91,7 +91,7 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 
 # MAGIC %sql
 # MAGIC
-
+# MAGIC
 # MAGIC -- You need to first create your table..
 # MAGIC CREATE TABLE IF NOT EXISTS my_stores;
 # MAGIC
@@ -103,14 +103,13 @@ dbutils.fs.ls(f"{datasets_location}/stores")
 # MAGIC FORMAT_OPTIONS ('mergeSchema' = 'true')
 # MAGIC COPY_OPTIONS ('mergeSchema' = 'true');
 
-
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC
-
+# MAGIC
 # MAGIC ## Hands On Task!
-
+# MAGIC
 # MAGIC
 # MAGIC What would that look using autoloader? You can find syntax for it here: https://docs.databricks.com/getting-started/etl-quick-start.html
 
@@ -197,7 +196,7 @@ weather_df.createOrReplaceTempView("weather_table")
 
 # COMMAND ----------
 
-
+# MAGIC
 # MAGIC %sql
 # MAGIC -- Create a temperature over time visualisation
 # MAGIC -- HINT - Click on <+> sign next to your result and add visualization tab -> select Line chart and provide time as `x column` and temperature as `y column`
@@ -216,13 +215,6 @@ weather_df.createOrReplaceTempView("weather_table")
 # MAGIC     from
 # MAGIC       weather_table
 # MAGIC   )
-
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC select * from weather_ds
 
 # COMMAND ----------
 
